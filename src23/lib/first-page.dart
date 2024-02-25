@@ -37,7 +37,15 @@ class MyFirstPageState extends State<MyFirstPage> {
               //TODO: Replace this Text Widget
               // and build the label and switch here
               // as children of the row.
-              
+              const Text('Enable Buttons'),
+              Switch(
+                value: enabled,
+                onChanged: (bool onChangedValue) {
+                  setState(() {
+                    enabled = onChangedValue;
+                  });
+                },
+              ),
             ],
           ),
           Row(
@@ -48,7 +56,30 @@ class MyFirstPageState extends State<MyFirstPage> {
               // For each button use a 
               // "Visibility Widget" and its child 
               // will be an "ElevatedButton"
-              
+              Visibility(
+                visible: enabled,
+                child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      timesClicked++;
+                      msg1 = 'Clicked $timesClicked';
+                    });
+                  },
+                  child: Text( timesClicked == 0 ? 'Click Me!' : msg1),
+                ),
+              ),
+              Visibility(
+                visible: enabled,
+                child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      timesClicked = 0;
+                      msg2 = 'Reset';
+                    });
+                  },
+                  child: Text(msg2),
+                ),
+              ),
             ],
           ),
           const SizedBox(
