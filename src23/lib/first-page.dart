@@ -21,7 +21,7 @@ class MyFirstPageState extends State<MyFirstPage> {
   bool enabled = false;
   int timesClicked = 0;
   String msg1 = '';
-  String msg2 = '';
+  String msg2 = 'Reset';
 
   @override
   Widget build(BuildContext context) {
@@ -58,26 +58,31 @@ class MyFirstPageState extends State<MyFirstPage> {
               // will be an "ElevatedButton"
               Visibility(
                 visible: enabled,
-                child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      timesClicked++;
-                      msg1 = 'Clicked $timesClicked';
-                    });
-                  },
-                  child: Text( timesClicked == 0 ? 'Click Me!' : msg1),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        timesClicked++;
+                        msg1 = 'Clicked $timesClicked';
+                      });
+                    },
+                    child: Text( timesClicked == 0 ? 'Click Me!' : msg1),
+                  ),
                 ),
               ),
               Visibility(
                 visible: enabled,
-                child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      timesClicked = 0;
-                      msg2 = 'Reset';
-                    });
-                  },
-                  child: Text(msg2),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        timesClicked = 0;
+                      });
+                    },
+                    child: Text(msg2),
+                  ),
                 ),
               ),
             ],
@@ -99,7 +104,49 @@ class MyFirstPageState extends State<MyFirstPage> {
                   // a submit button that will show a
                   // snackbar with the "firstName"
                   // if validation is satisfied.
-                  
+                  TextFormField(
+                    controller: textEditingController,
+                    onChanged: (value) {
+                      print(value);
+                    },
+                    onFieldSubmitted: (text) {
+                      print('First Name = $text');
+                    },
+                    validator: (input) {
+                      return input!.isEmpty ? 'min 1 character please' : null;
+                    },
+                    onSaved: (input) {
+                      print('first name = $input');
+                      firstName = input;
+                    },
+                    maxLength: 20,
+                    decoration: const InputDecoration(
+                      icon: Icon(Icons.emoji_emotions),
+                      labelText: 'first name',
+                      helperText: 'min 1, max 20',
+                      suffixIcon: Icon(
+                        Icons.check_circle,
+                      ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              formKey.currentState!.save();
+                              MySnackBar(text: 'Hello ' + firstName!).show();
+                              textEditingController.clear();
+                            }
+                          },
+                          child: const Text('Submit'),
+                        ),
+                      )
+                    ],
+                  ),
                 ],
               ),
             ),
